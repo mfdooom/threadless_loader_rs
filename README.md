@@ -27,3 +27,11 @@ Right now can generate either a `.exe` or `.dll` file. To specify this, ensure t
 - CCoB for the original [POC](https://github.com/CCob/ThreadlessInject/) and reaserch 
 - Kudaes for [DInvoke project](https://github.com/Kudaes/DInvoke_rs) which is used heavily in this project to make windows API calls
 - @mr-nukealizer for their [implementation](https://www.codeproject.com/Tips/139349/Getting-the-address-of-a-function-in-a-DLL-loaded) of remote module enumeration 
+
+## To-Do
+
+- [] Add option for sandbox evasion
+- [] Add option for different encryption types
+- [] Add option for creating process
+- [] Add option for ETW Patching
+- [] Add option for standalone loader
