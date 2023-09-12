@@ -96,11 +96,18 @@ fn build_file(project_name: &str){
 fn cleanup(project_name: &str, file_name: &str){
     let original_path = env::current_dir().unwrap();
     let project_path = original_path.join(project_name);
-    let compiled_file =project_path
+    let compiled_file = if cfg!(target_os = "windows") {
+        project_path
             .join("target")
             .join("release")
-            .join(format!("{}", file_name));
-    
+            .join(format!("{}", file_name))
+    } else {
+        project_path
+            .join("target")
+            .join("x86_64-pc-windows-gnu")
+            .join("release")
+            .join(format!("{}", file_name))
+    };
     if !compiled_file.exists() {
         eprintln!("Error: Compiled file not found");
         std::process::exit(1);
