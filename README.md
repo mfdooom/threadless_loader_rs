@@ -30,8 +30,8 @@ Right now can generate either a `.exe` or `.dll` file. To specify this, ensure t
 
 ## To-Do
 
-- [] Add option for sandbox evasion
-- [] Add option for different encryption types
-- [] Add option for creating process
-- [] Add option for ETW Patching
-- [] Add option for standalone loader
+- [ ] Add option for sandbox evasion
+- [ ] Add option for different encryption types
+- [ ] Add option for creating process
+- [ ] Add option for ETW Patching
+- [ ] Add option for standalone loader
