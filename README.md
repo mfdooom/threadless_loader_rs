@@ -27,8 +27,9 @@ Right now can generate either a `.exe` or `.dll` file. To specify this, ensure t
 
 ## Kudos
 
-- CCoB for the original [POC](https://github.com/CCob/ThreadlessInject/) and reaserch 
-- Kudaes for [DInvoke project](https://github.com/Kudaes/DInvoke_rs) which is used heavily in this project to make windows API calls
+- @CCoB for the original [POC](https://github.com/CCob/ThreadlessInject/) and reaserch 
+- @Kudaes for [DInvoke project](https://github.com/Kudaes/DInvoke_rs) which is used heavily in this project to make windows API calls
+- @Tylous for his work on Freeze.rs[https://github.com/optiv/Freeze.rs]. I used alot of the rust "meta programming" code for creating the payloads.
 - @mr-nukealizer for their [implementation](https://www.codeproject.com/Tips/139349/Getting-the-address-of-a-function-in-a-DLL-loaded) of remote module enumeration 
 
 ## To-Do
