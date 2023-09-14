@@ -182,7 +182,7 @@ fn create_project(project_name: &str, dll: bool) -> File{
 }
 
 fn create_build_file(project_name: &str) -> File{
-    let mut build_file = File::create(format!("{}/build.rs", project_name)).expect("Failed to create build.rs");
+    let build_file = File::create(format!("{}/build.rs", project_name)).expect("Failed to create build.rs");
     build_file
 
 }
