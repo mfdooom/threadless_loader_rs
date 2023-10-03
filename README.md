@@ -17,6 +17,7 @@ Options:
   -d, --dll <DLL>                        DLL that contains the export to patch
   -e, --export <EXPORT>                  Exported function that will be hijacked
   -o, --output <OUTPUT>                  Name of output file (e.g. loader.exe or loader.dll)
+  -f, --function <FUNCTION>              Name of the output dlls export function
   -h, --help                             Print help
   -V, --version                          Print version
 ~~~
