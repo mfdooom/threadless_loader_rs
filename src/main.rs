@@ -29,12 +29,17 @@ struct Args {
     /// Name of output file (e.g. loader.exe or loader.dll).
     #[arg(short, long)]
     output: String,
+
+    /// Name of the output dlls export function.
+    #[arg(short, long)]
+    function: Option<String>,
 } 
 
 
 fn main() {
     let args = Args::parse();
     let dll;
+    let function: String;
 
     let file = File::open(args.shellcode_file.unwrap()).expect("Unable to open the file");
     
@@ -43,7 +48,7 @@ fn main() {
     if args.output.ends_with(".exe"){
         dll = false;
     }else if args.output.ends_with(".dll"){
-        dll = true;
+        dll = true;      
     }else{
         println!("Output must end wit .dll or .exe");
         std::process::exit(1);
@@ -62,7 +67,8 @@ fn main() {
 
     file.write(libraries.as_bytes()).expect("Error writing to main.rs");
     if dll{
-        let dll_export = my_lib::dll_export();
+        function = args.function.unwrap_or(String::from("DllRegisterServer"));
+        let dll_export = my_lib::dll_export(function);
         file.write(dll_export.as_bytes()).expect("Error writing to lib.rs");
     }
     file.write(code.as_bytes()).expect("Error writing to main.rs");
@@ -90,6 +96,8 @@ fn build_file(project_name: &str){
         args.push("--target");
         args.push("x86_64-pc-windows-gnu");
     }
+
+    println!("[*] Compiling Payload");
     Command::new("cargo")
         .args(&args)
         .status()
