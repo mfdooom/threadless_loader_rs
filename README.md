@@ -4,7 +4,7 @@
 threadless_loader_rs is a payload creation tool used for circumventing EDR security controls based around CCob's [ThreadlessInject POC](https://github.com/CCob/ThreadlessInject/). There are some improvments to the original POC inlcuding executing the shellcode in a new thread. This allows for example a C2 beacon to be injected and the beacon will execute under the context of a new thread. Additionally, I added support for remote module enumeration so you can specify any DLL and export function to hijack not just Known DLLs.
 
 ## Usage
-Since we are using [LITCRYPT](https://github.com/anvie/litcrypt.rs) plugin to obfuscate string literals, it is required to set up the environment variable LITCRYPT_ENCRYPT_KEY before compiling the code:
+We are using [LITCRYPT](https://github.com/anvie/litcrypt.rs) plugin to obfuscate strings, it is required to set up the environment variable LITCRYPT_ENCRYPT_KEY before compiling the code:
 
 	C:\Users\User\Desktop\threadless_loader_rs> set LITCRYPT_ENCRYPT_KEY="yoursupersecretkey"
  
